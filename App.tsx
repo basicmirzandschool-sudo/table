@@ -9223,7 +9223,7 @@ const drawRoundedRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w:
               }`}>
                 <thead>
                   <tr className="bg-slate-100/90 text-slate-800 border-b-2 border-slate-200 text-xs font-black">
-                    <th className="p-1 sm:p-2.5 border-l border-slate-200 w-[18%] sm:w-[14%]">
+                    <th className="p-0.5 sm:p-2.5 border-l border-slate-200 w-[15%] sm:w-[13%]">
                       <span>ڕۆژ</span>
                     </th>
                     {(() => {
@@ -9305,24 +9305,24 @@ const drawRoundedRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w:
                               }}
                               className="p-0.5 sm:p-1.5 border-l border-slate-200 cursor-pointer transition-all"
                             >
-                              <div className={`w-full h-full min-h-[50px] sm:min-h-[78px] p-1 sm:p-1.5 rounded-xl flex flex-col items-center justify-center transition-all ${slotStyle}`}>
+                              <div className={`w-full h-full min-h-[46px] sm:min-h-[76px] p-0.5 sm:p-1.5 rounded-lg sm:rounded-xl flex flex-col items-center justify-center transition-all ${slotStyle}`}>
                                 {isFilled ? (
                                   <>
-                                    <span className="text-[10px] sm:text-base md:text-lg font-black tracking-tight leading-tight">
+                                    <span className="text-[9px] sm:text-base md:text-lg font-black tracking-tight leading-tight">
                                       {slot.className}
                                     </span>
-                                    {/* Distinctive Subject Badge */}
-                                    <span className="text-[8px] sm:text-[11px] font-black px-1.5 py-0.5 rounded-md bg-white/85 text-slate-800 shadow-xs border border-slate-300/60 mt-1 max-w-full truncate text-center">
+                                    {/* Subject Badge: compact on mobile, crystal clear inside timetable */}
+                                    <span className="text-[6.5px] sm:text-[11px] font-black px-1 py-0.2 sm:px-1.5 sm:py-0.5 rounded sm:rounded-md bg-white/90 text-slate-800 shadow-2xs sm:shadow-xs border border-slate-300/60 mt-0.5 sm:mt-1 max-w-full truncate text-center leading-tight">
                                       {slot.subject || teacherSubject}
                                     </span>
-                                    <span className="text-[7px] sm:text-[9px] font-mono opacity-70 mt-0.5 hidden sm:inline-block">
+                                    <span className="text-[6.5px] sm:text-[9px] font-mono opacity-70 mt-0.5 hidden sm:inline-block">
                                       {slot.startTime}
                                     </span>
                                   </>
                                 ) : (
-                                  <div className="flex flex-col items-center justify-center text-[9px] sm:text-xs font-medium text-slate-400">
+                                  <div className="flex flex-col items-center justify-center text-[8px] sm:text-xs font-medium text-slate-400">
                                     <span className="opacity-50">—</span>
-                                    <span className="text-[7px] sm:text-[9px] opacity-60">بێ وانە</span>
+                                    <span className="text-[6.5px] sm:text-[9px] opacity-60">بێ وانە</span>
                                   </div>
                                 )}
                               </div>
