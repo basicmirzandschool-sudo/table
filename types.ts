@@ -72,8 +72,8 @@ export interface ScheduleChangeRequest {
 }
 
 export const DEFAULT_DAY_SHIFTS: Record<string, ShiftType> = {
-  'ئێکشەمبی': 'evening', // نیڤڕۆ
-  'دووشەمبی': 'evening', // نیڤڕۆ
+  'ئێکشەمبی': 'morning', // سپێدە
+  'دووشەمبی': 'morning', // سپێدە
   'سێشەمبی': 'morning', // سپێدە
   'چوارشەمبی': 'morning', // سپێدە
   'پێنچ شەمبی': 'morning'  // سپێدە
@@ -91,14 +91,14 @@ export const DEFAULT_ALARM_SETTINGS: AlarmSettings = {
   triggerOnEnd: true,
   enabled: true,
   repeatCount: 3,
-  morningDuration: 35,
-  eveningDuration: 30,
+  morningDuration: 40,
+  eveningDuration: 35,
   morningStartTime: "08:00",
   eveningStartTime: "12:30",
-  lessonCount: 6,
+  lessonCount: 7,
   defaultBreakDuration: 5,
   longBreakLesson: 3,
-  longBreakDuration: 10,
+  longBreakDuration: 5,
   allKurdishLettersEnabled: false,
   customSections: ['ئـ', 'ب', 'ج', 'د', 'هـ', 'و', 'ز'],
   customSectionsCount: 7,

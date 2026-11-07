@@ -291,6 +291,7 @@ import {
   deleteScheduleChangeRequest
 } from './firebase';
 import { TeacherTimetableDoc, SwapSuggestion } from './types';
+import { KANI_ZARK_TEACHERS } from './teachersData';
 
 import { 
   Clock, 
@@ -525,7 +526,7 @@ export const reconcileScheduleWithDayShifts = (
 };
 
 
-const DEFAULT_SEED_TEACHERS: TeacherTimetableDoc[] = [];
+const DEFAULT_SEED_TEACHERS: TeacherTimetableDoc[] = KANI_ZARK_TEACHERS;
 
 const OFFLINE_TEACHERS_STORAGE_KEY = 'offline_all_teachers_cache_v3';
 
@@ -534,7 +535,7 @@ const getInitialAllTeachersList = (): TeacherTimetableDoc[] => {
     const cached = localStorage.getItem(OFFLINE_TEACHERS_STORAGE_KEY);
     if (cached) {
       const parsed = JSON.parse(cached);
-      if (Array.isArray(parsed)) {
+      if (Array.isArray(parsed) && parsed.length > 0) {
         return parsed.map((t: TeacherTimetableDoc) => ({
           ...t,
           schedule: reconcileScheduleWithDayShifts(t.schedule, DEFAULT_ALARM_SETTINGS, t.subject)
@@ -544,7 +545,7 @@ const getInitialAllTeachersList = (): TeacherTimetableDoc[] => {
   } catch (err) {
     console.warn("Failed reading cached teachers list:", err);
   }
-  return [];
+  return KANI_ZARK_TEACHERS;
 };
 
 const getKurdishDayName = (date: Date = new Date()): string => {
@@ -601,13 +602,17 @@ const App: React.FC = () => {
   const [customScripts, setCustomScripts] = useState<Record<string, string>>(VOICE_SCRIPTS);
   const [teacherName, setTeacherName] = useState<string>(() => {
     const saved = localStorage.getItem('teacher_name');
-    if (saved && (saved.includes('حسێن') || saved.includes('حوسێن'))) {
-      return 'مامۆستایێ هێژا';
+    if (saved && (saved.includes('حسێن') || saved.includes('حوسێن') || saved === 'مامۆستایێ هێژا' || saved === 'مامۆستایێ نوی')) {
+      return KANI_ZARK_TEACHERS[0].teacherName;
     }
-    return saved || 'مامۆستایێ هێژا';
+    return saved || KANI_ZARK_TEACHERS[0].teacherName;
   });
   const [compactWidgetMode, setCompactWidgetMode] = useState<boolean>(false);
-  const [teacherSubject, setTeacherSubject] = useState<string>(() => localStorage.getItem('teacher_subject') || "کیمیا");
+  const [teacherSubject, setTeacherSubject] = useState<string>(() => {
+    const saved = localStorage.getItem('teacher_subject');
+    if (!saved || saved === 'کیمیا') return KANI_ZARK_TEACHERS[0].subject;
+    return saved;
+  });
   const [activeTheme, setActiveTheme] = useState(THEMES[0]);
   const [fitMobileScreen, setFitMobileScreen] = useState<boolean>(() => {
     try {
@@ -797,8 +802,14 @@ const App: React.FC = () => {
 
   // Multi-Teacher & Firestore Sync State (100% Offline Cached)
   const [allTeachersList, setAllTeachersList] = useState<TeacherTimetableDoc[]>(getInitialAllTeachersList);
-  const [selectedTeacherId, setSelectedTeacherId] = useState<string>(() => localStorage.getItem('selected_teacher_id') || 'teacher_default');
-  const [showTeacherSelectModal, setShowTeacherSelectModal] = useState<boolean>(() => !localStorage.getItem('selected_teacher_id'));
+  const [selectedTeacherId, setSelectedTeacherId] = useState<string>(() => {
+    const saved = localStorage.getItem('selected_teacher_id');
+    if (!saved || saved === 'teacher_default' || saved === '') {
+      return KANI_ZARK_TEACHERS[0]?.id || 'teacher_shankal';
+    }
+    return saved;
+  });
+  const [showTeacherSelectModal, setShowTeacherSelectModal] = useState<boolean>(false);
   const [teacherSearchTerm, setTeacherSearchTerm] = useState<string>('');
   const [selectedGradeFilter, setSelectedGradeFilter] = useState<string>('all');
   const [selectedSectionFilter, setSelectedSectionFilter] = useState<string>('all');
