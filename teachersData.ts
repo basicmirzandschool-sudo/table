@@ -89,7 +89,7 @@ export const KANI_ZARK_TEACHERS: TeacherTimetableDoc[] = [
   {
     id: "teacher_amir",
     teacherName: "م. امیر",
-    subject: "عەرەبی و تەکنەلۆجیا",
+    subject: "عەرەبی، کۆمپیوتەر، ئایین",
     lessonCountPerDay: 7,
     notes: "مامۆستای عەرەبی، کۆمپیوتەر و ئایین - قوتابخانا کانی زەرک",
     updatedAt: new Date().toISOString(),
@@ -142,7 +142,7 @@ export const KANI_ZARK_TEACHERS: TeacherTimetableDoc[] = [
   {
     id: "teacher_zaytoon",
     teacherName: "م. زیتون زیتون",
-    subject: "زانست",
+    subject: "زانست و ئایین",
     lessonCountPerDay: 7,
     notes: "مامۆستای زانست و ئایین - قوتابخانا کانی زەرک",
     updatedAt: new Date().toISOString(),
@@ -194,7 +194,7 @@ export const KANI_ZARK_TEACHERS: TeacherTimetableDoc[] = [
   {
     id: "teacher_shaima",
     teacherName: "م. شیماء شیماء",
-    subject: "کۆمەڵایەتی",
+    subject: "کۆمەڵایەتی، کارمەیی، دەروونناسی",
     lessonCountPerDay: 7,
     notes: "مامۆستای کۆمەڵایەتی، کارمەیی و دەروونناسی - قوتابخانا کانی زەرک",
     updatedAt: new Date().toISOString(),
@@ -505,7 +505,7 @@ export const KANI_ZARK_TEACHERS: TeacherTimetableDoc[] = [
   {
     id: "teacher_sangar",
     teacherName: "م. سەنگەر",
-    subject: "کوردی",
+    subject: "کوردی و هونەر",
     lessonCountPerDay: 7,
     notes: "مامۆستای کوردی و هونەر (پۆلا 6، 7، 8، 9) - قوتابخانا کانی زەرک",
     updatedAt: new Date().toISOString(),
@@ -609,7 +609,7 @@ export const KANI_ZARK_TEACHERS: TeacherTimetableDoc[] = [
   {
     id: "teacher_arezu",
     teacherName: "م. ئارەزوو",
-    subject: "ئینگلێزی",
+    subject: "ئینگلێزی و هونەر",
     lessonCountPerDay: 7,
     notes: "مامۆستای ئینگلیزی (پۆلا 4 و 5) و هونەر (پۆلا 7، 8، 9) - قوتابخانا کانی زەرک",
     updatedAt: new Date().toISOString(),
@@ -656,7 +656,7 @@ export const KANI_ZARK_TEACHERS: TeacherTimetableDoc[] = [
   {
     id: "teacher_helin",
     teacherName: "م. هێلین",
-    subject: "کوردی",
+    subject: "کوردی، کارمەیی، ئایین",
     lessonCountPerDay: 7,
     notes: "مامۆستای کوردی (پۆلا 4 و 5) - قوتابخانا کانی زەرک",
     updatedAt: new Date().toISOString(),
@@ -761,7 +761,7 @@ export const KANI_ZARK_TEACHERS: TeacherTimetableDoc[] = [
   {
     id: "teacher_solin",
     teacherName: "م. سۆلین",
-    subject: "ئینگلێزی",
+    subject: "ئینگلێزی و کارمەیی",
     lessonCountPerDay: 7,
     notes: "مامۆستای ئینگلیزی (پۆلا 1، 2، 3) و کارمەیی - قوتابخانا کانی زەرک",
     updatedAt: new Date().toISOString(),

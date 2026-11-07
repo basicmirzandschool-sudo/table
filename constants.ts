@@ -1,4 +1,5 @@
 import { WeekSchedule, LessonSlot, ShiftType, AlarmSettings, DEFAULT_ALARM_SETTINGS } from './types';
+import { KANI_ZARK_TEACHERS } from './teachersData';
 
 export const VOICE_SCRIPTS: Record<string, string> = {
   'universal': "مامۆستایێ هێژا دەرس دەست پێ دکەت - هیڤیدارم بچنە پۆلێ دگەل رێزو سلاڤان.",
@@ -148,30 +149,4 @@ export const generateSlotsForDay = (
  * - Sunday (ئێکشەمبی) & Monday (دووشەمبی): Evening (نیڤڕۆ)
  * - Tuesday (سێشەمبی), Wednesday (چوارشەمبی), Thursday (پێنچ شەمبی): Morning (سپێدە)
  */
-export const INITIAL_SCHEDULE: WeekSchedule = {
-  'ئێکشەمبی': { 
-    dayName: 'ئێکشەمبی', 
-    shift: 'evening', 
-    slots: generateSlotsForDay('evening', ['10 - ب', '10 - د', 'بێ وانە', '10 - هـ', 'بێ وانە', '10 - و']) 
-  },
-  'دووشەمبی': { 
-    dayName: 'دووشەمبی', 
-    shift: 'evening', 
-    slots: generateSlotsForDay('evening', ['10 - ج', 'بێ وانە', '10 - و', 'بێ وانە', '10 - هـ', '10 - ب']) 
-  },
-  'سێشەمبی': { 
-    dayName: 'سێشەمبی', 
-    shift: 'morning', 
-    slots: generateSlotsForDay('morning', ['10 - د', '10 - ج', 'بێ وانە', '10 - و', 'بێ وانە', '10 - هـ']) 
-  },
-  'چوارشەمبی': { 
-    dayName: 'چوارشەمبی', 
-    shift: 'morning', 
-    slots: generateSlotsForDay('morning', ['10 - د', 'بێ وانە', 'بێ وانە', '10 - ج', '10 - ب', '10 - هـ']) 
-  },
-  'پێنچ شەمبی': { 
-    dayName: 'پێنچ شەمبی', 
-    shift: 'morning', 
-    slots: generateSlotsForDay('morning', ['10 - ج', '10 - ب', 'بێ وانە', 'بێ وانە', '10 - و', '10 - د']) 
-  },
-};
+export const INITIAL_SCHEDULE: WeekSchedule = KANI_ZARK_TEACHERS[0].schedule;

@@ -486,7 +486,7 @@ export const reconcileScheduleWithDayShifts = (
       const t = times[i];
       
       let className = 'بێ وانە';
-      let subject = teacherSubjectParam || 'کیمیا';
+      let subject = teacherSubjectParam || 'وانە';
       let slotId = `slot_${dayName}_${i}_${Math.random().toString(36).substring(2, 6)}`;
 
       if (t.isExam) {
@@ -496,7 +496,7 @@ export const reconcileScheduleWithDayShifts = (
         const ex = nonExamSlots[nonExamIdx];
         if (ex) {
           className = ex.className || 'بێ وانە';
-          subject = (ex.subject && ex.subject !== 'کیمیا') ? ex.subject : (teacherSubjectParam || 'کیمیا');
+          subject = (ex.subject && ex.subject !== 'کیمیا') ? ex.subject : (teacherSubjectParam || ex.subject || 'وانە');
           slotId = ex.id;
         }
         nonExamIdx++;
@@ -528,7 +528,7 @@ export const reconcileScheduleWithDayShifts = (
 
 const DEFAULT_SEED_TEACHERS: TeacherTimetableDoc[] = KANI_ZARK_TEACHERS;
 
-const OFFLINE_TEACHERS_STORAGE_KEY = 'offline_all_teachers_cache_v3';
+const OFFLINE_TEACHERS_STORAGE_KEY = 'offline_all_teachers_cache_v4';
 
 const getInitialAllTeachersList = (): TeacherTimetableDoc[] => {
   try {
@@ -925,7 +925,7 @@ const App: React.FC = () => {
         if (Array.isArray(idbData) && idbData.length > 0) {
           const reconciledIDB = idbData.map((t: TeacherTimetableDoc) => ({
             ...t,
-            schedule: reconcileScheduleWithDayShifts(t.schedule, alarmSettings)
+            schedule: reconcileScheduleWithDayShifts(t.schedule, alarmSettings, t.subject)
           }));
           setAllTeachersList((prev) => (reconciledIDB.length >= prev.length ? reconciledIDB : prev));
           try {
@@ -1054,7 +1054,7 @@ const App: React.FC = () => {
     setAllTeachersList((prevList) => {
       const updated = prevList.map((t) => ({
         ...t,
-        schedule: reconcileScheduleWithDayShifts(t.schedule, alarmSettings),
+        schedule: reconcileScheduleWithDayShifts(t.schedule, alarmSettings, t.subject),
       }));
       try {
         localStorage.setItem(OFFLINE_TEACHERS_STORAGE_KEY, JSON.stringify(updated));
@@ -1091,7 +1091,7 @@ const App: React.FC = () => {
         } else {
           const reconciledList = list.map((t) => ({
             ...t,
-            schedule: reconcileScheduleWithDayShifts(t.schedule, alarmSettings)
+            schedule: reconcileScheduleWithDayShifts(t.schedule, alarmSettings, t.subject)
           }));
           setAllTeachersList(reconciledList);
           try {
@@ -1353,20 +1353,20 @@ const App: React.FC = () => {
           ? { ...alarmSettings, ...activeDoc.alarmSettings } 
           : alarmSettings;
 
-        const reconciledSched = reconcileScheduleWithDayShifts(activeDoc.schedule, targetSettings);
+        const reconciledSched = reconcileScheduleWithDayShifts(activeDoc.schedule, targetSettings, activeDoc.subject);
         setTeacherName(activeDoc.teacherName);
-        setTeacherSubject(activeDoc.subject || 'کیمیا');
+        setTeacherSubject(activeDoc.subject || 'وانە');
         setSchedule(reconciledSched);
         setAlarmSettings(targetSettings);
 
         localStorage.setItem('timetable_data', JSON.stringify(reconciledSched));
         localStorage.setItem('teacher_name', activeDoc.teacherName);
-        localStorage.setItem('teacher_subject', activeDoc.subject || 'کیمیا');
+        localStorage.setItem('teacher_subject', activeDoc.subject || 'وانە');
         localStorage.setItem('alarm_settings_v10', JSON.stringify(targetSettings));
 
         saveBackupData('timetable_data', reconciledSched);
         saveBackupData('teacher_name', activeDoc.teacherName);
-        saveBackupData('teacher_subject', activeDoc.subject || 'کیمیا');
+        saveBackupData('teacher_subject', activeDoc.subject || 'وانە');
         saveBackupData('alarm_settings_v10', targetSettings);
       }
     }
@@ -1377,10 +1377,10 @@ const App: React.FC = () => {
       ? { ...alarmSettings, ...teacherDoc.alarmSettings } 
       : alarmSettings;
 
-    const reconciledSched = reconcileScheduleWithDayShifts(teacherDoc.schedule, targetSettings);
+    const reconciledSched = reconcileScheduleWithDayShifts(teacherDoc.schedule, targetSettings, teacherDoc.subject);
     setSelectedTeacherId(teacherDoc.id);
     setTeacherName(teacherDoc.teacherName);
-    setTeacherSubject(teacherDoc.subject || 'کیمیا');
+    setTeacherSubject(teacherDoc.subject || 'وانە');
     setSchedule(reconciledSched);
     setAlarmSettings(targetSettings);
 
@@ -8039,14 +8039,14 @@ const drawRoundedRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w:
                             </div>
                           </div>
 
-                          <span className={`text-xs font-bold px-2.5 py-1 rounded-xl ${
+                          <span className={`text-xs font-black px-2.5 py-1 rounded-xl shadow-xs border ${
                             slot.className === 'بێ وانە'
-                              ? 'bg-slate-200/50 text-slate-400'
+                              ? 'bg-slate-200/50 text-slate-400 border-slate-200'
                               : isCurrent
-                              ? 'bg-white/20 text-white'
-                              : 'bg-indigo-50 text-indigo-700'
+                              ? 'bg-white/20 text-white border-white/20'
+                              : 'bg-indigo-50 text-indigo-700 border-indigo-100'
                           }`}>
-                            {slot.className === 'بێ وانە' ? 'فەراغ' : selectedLookupTeacher.subject || 'کیمیا'}
+                            {slot.className === 'بێ وانە' ? 'فەراغ' : (slot.subject || selectedLookupTeacher.subject || 'وانە')}
                           </span>
                         </div>
                       );
@@ -8721,6 +8721,14 @@ const drawRoundedRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w:
                     : `پۆلا ${currentLiveSlot.slot.className}`
                   : 'هیچ وانەیەک نینە'}
               </h2>
+              {currentLiveSlot.slot && currentLiveSlot.slot.className !== 'بێ وانە' && (
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black bg-indigo-100 text-indigo-800 border border-indigo-200 shadow-xs">
+                    <GraduationCap className="w-4 h-4 text-indigo-600" />
+                    <span>بابەت: {currentLiveSlot.slot.subject || teacherSubject}</span>
+                  </span>
+                </div>
+              )}
               <p className="text-slate-500 font-bold text-sm">
                 {currentLiveSlot.slot ? `${currentLiveSlot.slot.startTime} — ${currentLiveSlot.slot.endTime}` : ''}
               </p>
@@ -8741,6 +8749,14 @@ const drawRoundedRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w:
                     : `پۆلا ${nextLiveSlot.className}`
                   : 'کۆتاییا دەوامی'}
               </h2>
+              {nextLiveSlot && nextLiveSlot.className !== 'بێ وانە' && (
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black bg-indigo-200/80 text-indigo-900 border border-indigo-300 shadow-xs">
+                    <GraduationCap className="w-4 h-4 text-indigo-700" />
+                    <span>بابەت: {nextLiveSlot.subject || teacherSubject}</span>
+                  </span>
+                </div>
+              )}
               <p className="text-slate-500 font-bold text-sm">
                 {nextLiveSlot ? `${nextLiveSlot.startTime} — ${nextLiveSlot.endTime}` : ''}
               </p>
@@ -9031,9 +9047,9 @@ const drawRoundedRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w:
                           </h3>
 
                           {slot.className !== 'بێ وانە' && (
-                            <span className="flex items-center gap-1 text-[11px] font-black px-2.5 py-1 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-xs">
+                            <span className="flex items-center gap-1.5 text-xs font-black px-2.5 py-1 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-xs">
                               <GraduationCap className="w-3.5 h-3.5 text-indigo-500" />
-                              <span>{teacherSubject || (slot.subject && slot.subject !== 'کیمیا' ? slot.subject : 'کیمیا')}</span>
+                              <span>{slot.subject || teacherSubject}</span>
                             </span>
                           )}
                         </div>
@@ -9289,14 +9305,15 @@ const drawRoundedRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w:
                               }}
                               className="p-0.5 sm:p-1.5 border-l border-slate-200 cursor-pointer transition-all"
                             >
-                              <div className={`w-full h-full min-h-[46px] sm:min-h-[75px] p-1 rounded-xl flex flex-col items-center justify-center transition-all ${slotStyle}`}>
+                              <div className={`w-full h-full min-h-[50px] sm:min-h-[78px] p-1 sm:p-1.5 rounded-xl flex flex-col items-center justify-center transition-all ${slotStyle}`}>
                                 {isFilled ? (
                                   <>
                                     <span className="text-[10px] sm:text-base md:text-lg font-black tracking-tight leading-tight">
                                       {slot.className}
                                     </span>
-                                    <span className="text-[7px] sm:text-[10px] font-bold opacity-80 mt-0.5 truncate max-w-full">
-                                      {teacherSubject || (slot.subject && slot.subject !== 'کیمیا' ? slot.subject : 'کیمیا')}
+                                    {/* Distinctive Subject Badge */}
+                                    <span className="text-[8px] sm:text-[11px] font-black px-1.5 py-0.5 rounded-md bg-white/85 text-slate-800 shadow-xs border border-slate-300/60 mt-1 max-w-full truncate text-center">
+                                      {slot.subject || teacherSubject}
                                     </span>
                                     <span className="text-[7px] sm:text-[9px] font-mono opacity-70 mt-0.5 hidden sm:inline-block">
                                       {slot.startTime}
